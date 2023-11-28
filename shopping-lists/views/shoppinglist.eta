@@ -1,0 +1,39 @@
+<% layout('./layouts/layout.eta') %>
+
+<h2>Add items</h2>
+<form method="POST">
+  Name: <input type="text" name="name" /><br/>
+  <input type="submit" value="Submit!" />
+</form>
+
+<h2>All items</h2>
+
+<% it.item.sort((a, b) => {
+  // Compare item names alphabetically
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+  return 0;
+}); %>
+
+<ul>
+  <% let uncollectedItems = it.item.filter(item => !item.collected); %>
+  <% let collectedItems = it.item.filter(item => item.collected); %>
+  
+  <% uncollectedItems.forEach((item) => { %>
+    <li>
+      <form method="POST" action="/lists/<%= item.shopping_list_id %>/items/<%= item.id %>/collect">
+        <p><%= item.name %></p>
+        <input type="submit" value="Mark collected!" />
+      </form>
+    </li>
+  <% }); %>
+
+  <% collectedItems.forEach((item) => { %>
+    <li>
+      <form method="POST" action="/lists/<%= item.shopping_list_id %>/items/<%= item.id %>/collect">
+        <del><p style="color:red;"><%= item.name %></p></del>
+        <input type="submit" value="Mark collected!" />
+      </form>
+    </li>
+  <% }); %>
+</ul>
